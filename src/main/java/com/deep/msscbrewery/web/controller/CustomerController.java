@@ -44,6 +44,7 @@ public class CustomerController {
 
     @DeleteMapping("/{customerId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    //@ResponseStatus(HttpStatus.BAD_REQUEST)
     public void deleteById(@PathVariable("customerId") UUID customerId){
         customerService.deleteById(customerId);
     }
