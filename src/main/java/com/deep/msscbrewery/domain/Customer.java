@@ -1,5 +1,4 @@
-package com.deep.msscbrewery.web.model;
-
+package com.deep.msscbrewery.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,11 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomerDto {
+public class Customer {
 
     private UUID id;
-
-    @NotBlank
-    @Size(min = 3, max = 100)
     private String name;
+
 }

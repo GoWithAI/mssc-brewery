@@ -5,14 +5,17 @@ import com.deep.msscbrewery.web.model.v2.BeerDtoV2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+//@Validated  for do not allow to pass null parameter or Request Body
 @RequestMapping("/api/v2/beer")
 @RestController
 public class BeerControllerV2 {
@@ -24,13 +27,13 @@ public class BeerControllerV2 {
     }
 
     @GetMapping({"/{beerId}"})
-    public ResponseEntity<BeerDtoV2> getBeer(@PathVariable("beerId") UUID beerId){
+    public ResponseEntity<BeerDtoV2> getBeer(@NotNull @PathVariable("beerId") UUID beerId){
 
         return new ResponseEntity(beerServiceV2.getBeerById(beerId), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity handlePost( @Valid @RequestBody BeerDtoV2 beerDtoV2){
+    public ResponseEntity handlePost( @Valid @NotNull @RequestBody BeerDtoV2 beerDtoV2){
         BeerDtoV2 savedDtoV2=beerServiceV2.saveNewBeer(beerDtoV2);
 
         HttpHeaders headers = new HttpHeaders();
@@ -38,7 +41,7 @@ public class BeerControllerV2 {
         headers.add("Location", "/api/v1/beer"+savedDtoV2.getId().toString());
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
-    //Idompotent
+    //Idempotent
     @PutMapping({"/{beerId}"})
     public ResponseEntity handleUpdate(@PathVariable("beerId") UUID beerId,@Valid @RequestBody BeerDtoV2 beerDtoV2){
 
@@ -52,7 +55,7 @@ public class BeerControllerV2 {
         beerServiceV2.deleteById(beerIdV2);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+   /* @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity validationErrorHandler(ConstraintViolationException e){
         List<String> errors = new ArrayList<>(e.getConstraintViolations().size());
 
@@ -61,5 +64,5 @@ public class BeerControllerV2 {
         });
 
         return new ResponseEntity(errors, HttpStatus.BAD_REQUEST);
-    }
+    }*/
 }
